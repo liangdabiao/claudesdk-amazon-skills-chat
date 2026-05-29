@@ -19,7 +19,7 @@ export function useWebSocket() {
     ws.onopen = () => {
       setIsConnected(true);
       retryRef.current = 0;
-      ws.send(JSON.stringify({ type: "subscribe", chatId: "default" }));
+      ws.send(JSON.stringify({ type: "subscribe", chatId: getChatId() }));
     };
     ws.onclose = () => {
       setIsConnected(false);
@@ -76,7 +76,7 @@ export function useWebSocket() {
 
   const sendMessage = useCallback((content: string, files?: { name: string; path: string }[]) => {
     const payload = files?.length ? `${content}\n\n附件文件：${files.map((f) => `${f.name} (${f.path})`).join(", ")}` : content;
-    wsRef.current?.send(JSON.stringify({ type: "chat", chatId: "default", content: payload }));
+    wsRef.current?.send(JSON.stringify({ type: "chat", chatId: getChatId(), content: payload }));
   }, []);
 
   return { messages, sendMessage, isConnected, isThinking };
